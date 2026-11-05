@@ -97,12 +97,19 @@
         <input type="email" id="email" class="form-control" placeholder="npm@mhs.ubpkarawang.ac.id" required>
       </div>
 
-      <div class="form-group">
+<div class="form-group">
         <label><i class="fa-solid fa-graduation-cap"></i> Program Studi</label>
         <select id="prodi" class="form-control" required>
           <option value="" disabled selected>Pilih Program Studi</option>
           <option value="Teknik Industri">Teknik Industri</option>
+          <option value="Lainnya">Lainnya (Tulis Manual)</option>
         </select>
+      </div>
+
+      <!-- Kolom Text Input Manual (Muncul jika memilih "Lainnya") -->
+      <div class="form-group" id="prodiLainnyaGroup" style="display: none;">
+        <label><i class="fa-solid fa-pen-to-square"></i> Tuliskan Nama Program Studi</label>
+        <input type="text" id="prodiLainnya" class="form-control" placeholder="Masukkan nama program studi Anda">
       </div>
 
       <div class="form-group">
