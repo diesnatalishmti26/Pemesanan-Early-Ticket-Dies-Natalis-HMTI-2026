@@ -79,7 +79,7 @@
     <div class="payment-box">
       <h3><i class="fa-solid fa-wallet"></i> Informasi Rekening Pembayaran</h3>
       <div class="bank-details">
-        <div class="bank-item"><small>SeaBank</small><strong>901-083-216-572</strong><small>a.n. Dwi Lestari</small></div>
+        <div class="bank-item"><small>SeaBank</small><strong>9010-8321-6572</strong><small>a.n. Dwi Lestari</small></div>
         <div class="bank-item"><small>E-Wallet (Dana)</small><strong>0856-9496-5938</strong><small>a.n. Dwi Lestari</small></div>
       </div>
     </div>
@@ -97,7 +97,7 @@
         <input type="email" id="email" class="form-control" placeholder="npm@mhs.ubpkarawang.ac.id" required>
       </div>
 
-<div class="form-group">
+      <div class="form-group">
         <label><i class="fa-solid fa-graduation-cap"></i> Program Studi</label>
         <select id="prodi" class="form-control" required>
           <option value="" disabled selected>Pilih Program Studi</option>
@@ -106,7 +106,7 @@
         </select>
       </div>
 
-      <!-- Kolom Text Input Manual (Muncul jika memilih "Lainnya") -->
+      <!-- Input Text Manual Program Studi Lainnya -->
       <div class="form-group" id="prodiLainnyaGroup" style="display: none;">
         <label><i class="fa-solid fa-pen-to-square"></i> Tuliskan Nama Program Studi</label>
         <input type="text" id="prodiLainnya" class="form-control" placeholder="Masukkan nama program studi Anda">
@@ -160,6 +160,7 @@
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgpph9Bsclt3jx4l-Sqo003wE0VBph-w9Hk9PSzoWxAaMWNEVOPcWAvmDU1g0a9VLY4w/exec";
+    
     const form = document.getElementById('registrationForm');
     const submitBtn = document.getElementById('submitBtn');
     const spinner = document.getElementById('spinner');
@@ -167,6 +168,22 @@
     const jenisKartuSelect = document.getElementById('jenisKartu');
     const labelKartu = document.getElementById('labelKartu');
     const sisaKuotaElement = document.getElementById('sisaKuota');
+    
+    const prodiSelect = document.getElementById('prodi');
+    const prodiLainnyaGroup = document.getElementById('prodiLainnyaGroup');
+    const prodiLainnyaInput = document.getElementById('prodiLainnya');
+
+    // Pengaturan muncul/tutup input teks prodi manual
+    prodiSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'Lainnya') {
+        prodiLainnyaGroup.style.display = 'block';
+        prodiLainnyaInput.required = true;
+      } else {
+        prodiLainnyaGroup.style.display = 'none';
+        prodiLainnyaInput.required = false;
+        prodiLainnyaInput.value = '';
+      }
+    });
 
     async function loadKuota() {
       try {
@@ -209,11 +226,15 @@
         const kartuFile = document.getElementById('kartuFile').files[0];
         const buktiFile = document.getElementById('buktiFile').files[0];
 
+        // Ambil nilai prodi (jika Lainnya, ambil teks dari input manual)
+        const selectedProdi = prodiSelect.value;
+        const finalProdi = selectedProdi === 'Lainnya' ? prodiLainnyaInput.value : selectedProdi;
+
         const payload = {
           kategoriTiket: "Early Ticket",
           nama: document.getElementById('nama').value,
           email: email,
-          prodi: document.getElementById('prodi').value,
+          prodi: finalProdi,
           angkatan: document.getElementById('angkatan').value,
           whatsapp: document.getElementById('whatsapp').value,
           jenisKartu: jenisKartuSelect.value,
@@ -229,6 +250,7 @@
         if (result.result === 'success') {
           successModal.classList.add('active');
           form.reset();
+          prodiLainnyaGroup.style.display = 'none';
           loadKuota();
         } else {
           alert(result.message);
